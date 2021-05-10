@@ -53,12 +53,16 @@ class ContactSubmitListener implements EventSubscriberInterface
 
         // form filling duration
         if ($config['form_fill_duration']) {
-            $formFillDuration = (int) date_diff(
-                new DateTime($data['form_load_time']),
-                new DateTime()
-            )->format('%s');
+            try {
+                $formFillDuration = (int) date_diff(
+                    new DateTime($data['form_load_time']),
+                    new DateTime()
+                )->format('%s');
+            } catch (Exception $e) {
+                $isSpam = true;
+            }
 
-            if ($config['form_fill_duration_limit'] && $config['form_fill_duration_limit'] > $formFillDuration) {
+            if (!$isSpam && $config['form_fill_duration_limit'] > $formFillDuration) {
                 $isSpam = true;
             }
         }
