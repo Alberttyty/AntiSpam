@@ -4,6 +4,7 @@ namespace AntiSpam\EventListeners;
 
 use AntiSpam\AntiSpam;
 use DateTime;
+use Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Contact\ContactEvent;
 use Thelia\Core\Event\TheliaEvents;
@@ -37,17 +38,12 @@ class ContactSubmitListener implements EventSubscriberInterface
         $config = json_decode(AntiSpam::getConfigValue('antispam_config'), true);
 
         //honeypot
-        if ($config['honeypot'] && null !== $data['website']) {
+        if ($config['honeypot'] && null !== $data['bear']) {
             $isSpam = true;
         }
 
         //question
         if ($config['question'] && $this->cleanString($this->request->getSession()->get('questionAnswer')) !== $this->cleanString($data['questionAnswer'])) {
-            $isSpam = true;
-        }
-
-        //calculation
-        if ($config['calculation'] && $this->cleanString($this->request->getSession()->get('calculationAnswer')) !== $this->cleanString($data['calculationAnswer'])) {
             $isSpam = true;
         }
 
