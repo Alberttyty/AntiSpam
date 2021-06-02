@@ -14,7 +14,7 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-         <service id="antispam.submit" class="AntiSpam\EventListeners\ContactSubmitListener" scope="request">
+         <service id="antispam.submit" class="AntiSpam\EventListeners\FormSubmitListener" scope="request">
             <argument type="service" id="request" />
             <tag name="kernel.event_subscriber" />
         </service>
@@ -22,10 +22,13 @@
 
     <hooks>
         <hook id="antispam.contact_form_hook" class="AntiSpam\Hook\HookManager">
-            <tag name="hook.event_listener" event="contact.form-top" type="front" method="onContactFormTop" />
-            <tag name="hook.event_listener" event="contact.form-bottom" type="front" method="onContactFormBottom" />
-            <tag name="hook.event_listener" event="contact.stylesheet" type="front" method="onContactStylesheet" />
-            <tag name="hook.event_listener" event="contact.javascript-initialization" type="front" method="onContactJSInitialization" />
+            <!--
+            <tag name="hook.event_listener" event="contact.form-top" method="onContactFormTop" />
+            <tag name="hook.event_listener" event="contact.form-bottom" method="onContactFormBottom" />
+            <tag name="hook.event_listener" event="contact.stylesheet" method="onContactStylesheet" />
+            <tag name="hook.event_listener" event="contact.javascript-initialization" method="onContactJSInitialization" />
+            -->
+            <tag name="hook.event_listener" event="pxlpluri.antispam" method="onContactFormBottom" />
         </hook>
         <hook id="antispam.configuration">
             <tag name="hook.event_listener" event="module.configuration" type="back" templates="render:module_configuration.html" />

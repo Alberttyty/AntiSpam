@@ -4,10 +4,8 @@ namespace AntiSpam\EventListeners;
 
 use AntiSpam\AntiSpam;
 use AntiSpam\Model\QuestionGeneratorTrait;
-use DateTime;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Thelia\Core\Event\TheliaEvents;
 use Thelia\Core\Event\TheliaFormEvent;
@@ -22,8 +20,6 @@ class FormAfterBuildListener implements EventSubscriberInterface
 {
     use QuestionGeneratorTrait;
 
-    const FORM = 'thelia_contact';
-
     protected $request;
 
     public function __construct(Request $request)
@@ -37,35 +33,26 @@ class FormAfterBuildListener implements EventSubscriberInterface
     public function addAntiSpamFields(TheliaFormEvent $event)
     {
         $formBuilder = $event->getForm()->getFormBuilder();
-
         $config = json_decode(AntiSpam::getConfigValue('antispam_config'), true);
 
         // form filling duration field
-        if ($config['form_fill_duration']) {
-            $this->addFormFillingDurationField($formBuilder);
-        }
-
+        if ($config['form_fill_duration']) $this->addFormFillingDurationField($formBuilder);
         // honeypot field
-        if ($config['honeypot']) {
-            $this->addHoneypotField($formBuilder);
-        }
-
+        if ($config['honeypot']) $this->addHoneypotField($formBuilder);
         // question
-        if ($config['question']) {
-            $this->addQuestionField($formBuilder);
-        }
+        if ($config['question']) $this->addQuestionField($formBuilder);
     }
 
     protected function addFormFillingDurationField(FormBuilderInterface $formBuilder)
     {
-        $formBuilder->add("form_load_time", HiddenType::class, [
-            'data' => (new DateTime())->format('Y-m-d H:i:s')
+        $formBuilder->add("form_load_time", Type\HiddenType::class, [
+            'data' => (new \DateTime())->format('Y-m-d H:i:s')
         ]);
     }
 
     protected function addHoneypotField(FormBuilderInterface $formBuilder)
     {
-        $formBuilder->add("bear", TextType::class, [
+        $formBuilder->add("bear", Type\TextType::class, [
             "label" => Translator::getInstance()->trans("Bear", [], 'antispam'),
             "label_attr" => [
                 "for" => "bear"
@@ -84,7 +71,7 @@ class FormAfterBuildListener implements EventSubscriberInterface
             $session->set('questionAnswer', $question['answerLabel']);
         }
 
-        $formBuilder->add("questionAnswer", TextType::class, [
+        $formBuilder->add("questionAnswer", Type\TextType::class, [
             "constraints" => [
                 new NotBlank(),
             ],
@@ -103,9 +90,10 @@ class FormAfterBuildListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            (TheliaEvents::FORM_AFTER_BUILD.".".self::FORM) => [
-                'addAntiSpamFields', 128
-            ]
+            TheliaEvents::FORM_AFTER_BUILD.'.'.AntiSpam::CONTACT => ['addAntiSpamFields', 128],
+            TheliaEvents::FORM_AFTER_BUILD.'.'.AntiSpam::CUSTOMER_CREATE => ['addAntiSpamFields', 128],
+            TheliaEvents::FORM_AFTER_BUILD.'.'.AntiSpam::NEWSLETTER => ['addAntiSpamFields', 128],
+            TheliaEvents::FORM_AFTER_BUILD.'.'.AntiSpam::NEWSLETTER_UNSUBSCRIBE => ['addAntiSpamFields', 128],
         ];
     }
 }
