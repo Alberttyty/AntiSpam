@@ -4,10 +4,10 @@
         xsi:schemaLocation="http://thelia.net/schema/dic/module http://thelia.net/schema/dic/module/module-2_2.xsd">
     <fullnamespace>AntiSpam\AntiSpam</fullnamespace>
     <descriptive locale="en_US">
-        <title>Antispam</title>
+        <title>AntiSpam</title>
     </descriptive>
     <descriptive locale="fr_FR">
-        <title>Antispam</title>
+        <title>AntiPourriel</title>
     </descriptive>
     <languages>
         <language>en_US</language>
@@ -16,13 +16,17 @@
     <version>1.0</version>
     <authors>
         <author>
-            <name></name>
-            <email></email>
+            <name>Charles ANGUENOT</name>
+            <company>Pixel PLurimédia</company>
+            <email>charles.anguenot@gmail.com</email>
+        </author>
+        <author>
+            <name>Thierry CARESMEL</name>
+            <company>Pixel PLurimédia</company>
+            <email>thierry@pixel-plurimedia.fr</email>
         </author>
     </authors>
     <type>classic</type>
     <thelia>2.4.3</thelia>
     <stability>other</stability>
-    <mandatory>0</mandatory>
-    <hidden>0</hidden>
 </module>
