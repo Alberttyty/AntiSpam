@@ -47,7 +47,7 @@ class FormSubmitListener implements EventSubscriberInterface
      */
     public function checkNewsletterEvent(NewsletterEvent $event)
     {
-        if (null == $event->getNewsletter()->getUnsubscribed()) $this->checkSubmit($this->request->request->get(Antispam::NEWSLETTER));
+        if (null == $event->getNewsletter() || null == $event->getNewsletter()->getUnsubscribed()) $this->checkSubmit($this->request->request->get(Antispam::NEWSLETTER));
         else $this->checkSubmit($this->request->request->get(Antispam::NEWSLETTER_UNSUBSCRIBE));
     }
 
@@ -60,7 +60,7 @@ class FormSubmitListener implements EventSubscriberInterface
         $config = json_decode(AntiSpam::getConfigValue('antispam_config'), true);
 
         //honeypot
-        if ($config['honeypot'] && null !== $data['bear']) $isSpam = true;
+        if ($config['honeypot'] && null != $data['bear']) $isSpam = true;
         //question
         if ($config['question'] && $this->cleanString($this->request->getSession()->get('questionAnswer')) !== $this->cleanString($data['questionAnswer'])) {
             $isSpam = true;
