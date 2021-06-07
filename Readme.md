@@ -9,14 +9,6 @@ Antispam protection for Thelia forms : contact, customer registration, newslette
 * Copy the module into ```<thelia_root>/local/modules/``` directory and be sure that the name of the module is AntiSpam.
 * Activate it in your thelia administration panel
 
-### Composer
-
-Add it in your main thelia composer.json file
-
-```
-composer require your-vendor/anti-spam-module:~1.0
-```
-
 ## Usage
 
 In the module configuration you can chose which elements of protection you want to activate or deactivate.
