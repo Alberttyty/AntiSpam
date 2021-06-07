@@ -1,7 +1,7 @@
 $(function() {
     // refresh question label
-    document.querySelector('#question_refresh').addEventListener('click', function() {
-        $('#question-label-container').load(this.dataset.href + ' #question-label-content');
+    document.getElementById('question_refresh').addEventListener('click', (e) => {
+        $('#question-label-container').load(e.currentTarget.dataset.href + ' #question-label-content');
     });
 });
 
