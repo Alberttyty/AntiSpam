@@ -39,7 +39,7 @@ class FormSubmitListener implements EventSubscriberInterface
      */
     public function checkCustomerCreation(CustomerCreateOrUpdateEvent $event)
     {
-        $this->checkSubmit($this->request->request->get(Antispam::CUSTOMER_CREATE));
+        if (null !== $customerCreateForm = $this->request->request->get(Antispam::CUSTOMER_CREATE)) $this->checkSubmit($customerCreateForm);
     }
 
     /**
@@ -47,8 +47,8 @@ class FormSubmitListener implements EventSubscriberInterface
      */
     public function checkNewsletterEvent(NewsletterEvent $event)
     {
-        if (null == $event->getNewsletter() || null == $event->getNewsletter()->getUnsubscribed()) $this->checkSubmit($this->request->request->get(Antispam::NEWSLETTER));
-        else $this->checkSubmit($this->request->request->get(Antispam::NEWSLETTER_UNSUBSCRIBE));
+        if (null !== $subscribeForm = $this->request->request->get(Antispam::NEWSLETTER)) $this->checkSubmit($subscribeForm);
+        else if (null !== $unsubscribeForm = $this->request->request->get(Antispam::NEWSLETTER_UNSUBSCRIBE)) $this->checkSubmit($unsubscribeForm);
     }
 
     /**
